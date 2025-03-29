@@ -92,50 +92,93 @@ const ServicesSection: React.FC = () => {
   // State for hover effect
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
+  // Variants for staggered animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <section className="py-16 relative overflow-hidden" dir="rtl">
+    <section id="services" className="py-24 relative overflow-hidden" dir="rtl">
       {/* Background with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#feffd6] to-[#fcff2e] opacity-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-white to-secondary/5"></div>
       
       {/* Glassmorphism background circles */}
-      <div className="absolute top-20 right-20 w-64 h-64 rounded-full bg-[#fcff2e] opacity-20 blur-3xl"></div>
-      <div className="absolute bottom-20 left-20 w-96 h-96 rounded-full bg-[#fcff2e] opacity-20 blur-3xl"></div>
+      <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-primary/30 opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-20 left-20 w-96 h-96 rounded-full bg-secondary/30 opacity-20 blur-3xl"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/10 opacity-30 blur-3xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-800">
-            השירותים שלנו
-          </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
+        >
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold mb-6 text-gray-800"
+          >
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">השירותים</span> שלנו
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-xl text-gray-700 max-w-3xl mx-auto"
+          >
             במכון כושר ביתא אנו מציעים מגוון רחב של שירותים מקצועיים המותאמים לצרכים האישיים שלך
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {services.map((service, index) => (
             <motion.div
               key={service.id}
-              className="relative backdrop-blur-md bg-white/30 rounded-xl p-6 border border-white/40 shadow-lg overflow-hidden group"
+              variants={itemVariants}
+              className="relative backdrop-blur-md bg-white/50 rounded-3xl p-8 border border-white/60 shadow-card overflow-hidden group"
               style={{ 
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)'
               }}
               whileHover={{ 
-                y: -5,
+                y: -8,
+                scale: 1.02,
                 boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                transition: { duration: 0.3 }
+                transition: { type: "spring", stiffness: 300 }
               }}
               onMouseEnter={() => setHoveredId(service.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
               {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-24 h-24 bg-[#fcff2e]/20 rounded-full -mr-12 -mt-12"></div>
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-[#fcff2e]/30 rounded-full -ml-8 -mb-8"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -mr-16 -mt-16 transition-all duration-500 group-hover:bg-primary/30"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-secondary/20 rounded-full -ml-12 -mb-12 transition-all duration-500 group-hover:bg-secondary/30"></div>
               
               <div className="relative z-10">
                 <div className="flex justify-center mb-6">
                   <motion.div 
-                    className="text-[#fcff2e] bg-gray-800/80 p-4 rounded-full"
+                    className="text-white bg-gradient-to-br from-primary to-primary-dark p-4 rounded-2xl shadow-xl"
                     whileHover={{ rotate: 5, scale: 1.1 }}
                     animate={{ 
                       y: hoveredId === service.id ? [0, -5, 0] : 0 
@@ -151,7 +194,7 @@ const ServicesSection: React.FC = () => {
                   </motion.div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-800 mb-3 text-center">
+                <h3 className="text-2xl font-bold text-gray-800 mb-4 text-center group-hover:text-primary transition-colors duration-300">
                   {service.title}
                 </h3>
                 
@@ -160,7 +203,7 @@ const ServicesSection: React.FC = () => {
                 </p>
                 
                 <motion.div 
-                  className="mt-6 flex justify-center"
+                  className="mt-8 flex justify-center"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ 
                     opacity: hoveredId === service.id ? 1 : 0,
@@ -168,14 +211,35 @@ const ServicesSection: React.FC = () => {
                   }}
                   transition={{ duration: 0.3 }}
                 >
-                  <button className="px-6 py-2 bg-[#fcff2e] text-gray-800 rounded-full font-bold hover:bg-[#e6e729] transition-colors duration-300 shadow-md">
+                  <button className="px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-bold hover:shadow-lg hover:shadow-primary/20 transition-all duration-300">
                     פרטים נוספים
                   </button>
                 </motion.div>
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* CTA Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="mt-20 text-center bg-gradient-to-r from-primary/10 to-secondary/10 p-10 rounded-3xl backdrop-blur-sm border border-white/40 shadow-xl"
+        >
+          <h3 className="text-3xl font-bold mb-4 text-gray-800">מוכנים להתחיל את מסע הכושר שלכם?</h3>
+          <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+            הצטרפו היום למכון כושר ביתא וקבלו שבוע ניסיון חינם וייעוץ אישי ללא התחייבות!
+          </p>
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-10 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-primary/30 transition-all duration-300"
+          >
+            קבעו פגישת היכרות
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );

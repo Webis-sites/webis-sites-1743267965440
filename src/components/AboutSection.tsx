@@ -1,24 +1,36 @@
+'use client';
+
 import { FC } from 'react';
 import { FaDumbbell, FaAward, FaUsers, FaClock } from 'react-icons/fa';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  index: number;
 }
 
-const FeatureCard: FC<FeatureCardProps> = ({ icon, title, description }) => {
+const FeatureCard: FC<FeatureCardProps> = ({ icon, title, description, index }) => {
   return (
-    <div className="relative backdrop-blur-md bg-white/20 rounded-xl p-6 shadow-lg border border-white/30 overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 group">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#fcff2e]/20 to-[#feffd6]/30 opacity-80 z-0"></div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      className="relative backdrop-blur-md bg-white/20 rounded-3xl p-6 shadow-card border border-white/30 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 opacity-80 z-0"></div>
       <div className="relative z-10">
-        <div className="text-[#fcff2e] bg-black/50 p-3 rounded-full inline-block mb-4 shadow-inner">
+        <div className="text-primary bg-black/50 p-3 rounded-full inline-block mb-4 shadow-inner">
           {icon}
         </div>
         <h3 className="text-xl font-bold mb-2 text-black">{title}</h3>
         <p className="text-black/80">{description}</p>
       </div>
-    </div>
+      <div className="absolute -bottom-2 -left-2 w-12 h-12 bg-primary rounded-full opacity-20 blur-xl transition-all duration-500 group-hover:w-20 group-hover:h-20"></div>
+    </motion.div>
   );
 };
 
@@ -47,25 +59,63 @@ const AboutSection: FC = () => {
     }
   ];
 
+  // Variants for staggered animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
-    <section className="relative py-16 overflow-hidden" dir="rtl">
+    <section id="about" className="relative py-20 overflow-hidden" dir="rtl">
       {/* Background with glassmorphism effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#feffd6] to-[#fcff2e]/70 -z-10"></div>
-      <div className="absolute inset-0 bg-[url('/fitness-pattern.png')] opacity-5 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 -z-10"></div>
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1594882645126-14020914d58d?q=80&w=2085')] bg-fixed opacity-5 -z-10"></div>
       
-      <div className="container mx-auto px-4 max-w-6xl">
+      {/* Decorative Elements */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-3xl"></div>
+      
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
         {/* Section Header */}
-        <div className="relative backdrop-blur-sm bg-white/10 rounded-2xl p-8 mb-16 border border-white/20 shadow-lg">
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#fcff2e] rounded-full opacity-30 blur-2xl"></div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="relative backdrop-blur-sm bg-white/70 rounded-3xl p-10 mb-16 border border-white/60 shadow-xl"
+        >
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary rounded-full opacity-20 blur-2xl"></div>
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center text-black">
-              אודות <span className="text-black bg-[#fcff2e] px-2 rounded-lg">מכון כושר ביתא</span>
-            </h2>
-            <p className="text-xl text-center max-w-3xl mx-auto text-black/80 leading-relaxed">
-              אנחנו מכון כושר מוביל בתחום עם ניסיון של שנים רבות. אנחנו מתמחים במתן שירות מקצועי ואיכותי ללקוחותינו.
-            </p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-bold mb-6 text-center"
+            >
+              אודות <span className="text-white bg-primary px-3 py-1 rounded-lg">מכון כושר ביתא</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-xl text-center max-w-3xl mx-auto text-gray-700 leading-relaxed"
+            >
+              אנחנו מכון כושר מוביל בתחום עם ניסיון של שנים רבות. מתמחים במתן שירות מקצועי ואיכותי ללקוחותינו דרך ציוד מתקדם, צוות מיומן ואווירה תומכת.
+            </motion.p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -75,42 +125,99 @@ const AboutSection: FC = () => {
               icon={feature.icon}
               title={feature.title}
               description={feature.description}
+              index={index}
             />
           ))}
         </div>
 
-        {/* Trust Section */}
-        <div className="relative backdrop-blur-md bg-white/20 rounded-xl p-8 mt-16 border border-white/30 shadow-lg overflow-hidden">
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-[#fcff2e] rounded-full opacity-20 blur-3xl"></div>
-          <div className="relative z-10">
-            <h3 className="text-2xl font-bold mb-4 text-black">למה לבחור בנו?</h3>
-            <ul className="space-y-3 text-black/80">
-              <li className="flex items-center gap-2">
-                <span className="text-[#fcff2e] bg-black/50 p-1 rounded-full">✓</span>
-                <span>צוות מקצועי ומנוסה שילווה אותך לאורך כל הדרך</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-[#fcff2e] bg-black/50 p-1 rounded-full">✓</span>
-                <span>תוכניות אימון מותאמות אישית לפי הצרכים והיעדים שלך</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-[#fcff2e] bg-black/50 p-1 rounded-full">✓</span>
-                <span>מגוון רחב של שיעורים וסדנאות לכל רמות הכושר</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-[#fcff2e] bg-black/50 p-1 rounded-full">✓</span>
-                <span>אווירה תומכת ומוטיבציה לעזור לך להשיג את המטרות שלך</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        {/* About Content with Image */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center"
+        >
+          {/* Image Side */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="relative rounded-3xl overflow-hidden shadow-xl h-[400px]"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070"
+              alt="מכון כושר ביתא - אימון איכותי"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div className="absolute bottom-6 right-6 backdrop-blur-md bg-black/30 px-4 py-2 rounded-xl border border-white/10 shadow-lg">
+              <p className="text-white font-medium">10+ שנות ניסיון</p>
+            </div>
+          </motion.div>
 
-        {/* Call to Action */}
-        <div className="mt-12 text-center">
-          <button className="bg-black text-[#fcff2e] font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-            הצטרפו אלינו עכשיו
-          </button>
-        </div>
+          {/* Content Side */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            <motion.h3 variants={itemVariants} className="text-3xl font-bold text-gray-800">למה לבחור בנו?</motion.h3>
+            <motion.ul variants={containerVariants} className="space-y-4 text-gray-700">
+              <motion.li variants={itemVariants} className="flex items-center gap-3">
+                <span className="text-white bg-primary p-1.5 rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span className="text-lg">צוות מקצועי ומנוסה שילווה אותך לאורך כל הדרך</span>
+              </motion.li>
+              <motion.li variants={itemVariants} className="flex items-center gap-3">
+                <span className="text-white bg-primary p-1.5 rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span className="text-lg">תוכניות אימון מותאמות אישית לפי הצרכים והיעדים שלך</span>
+              </motion.li>
+              <motion.li variants={itemVariants} className="flex items-center gap-3">
+                <span className="text-white bg-primary p-1.5 rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span className="text-lg">מגוון רחב של שיעורים וסדנאות לכל רמות הכושר</span>
+              </motion.li>
+              <motion.li variants={itemVariants} className="flex items-center gap-3">
+                <span className="text-white bg-primary p-1.5 rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span className="text-lg">אווירה תומכת ומוטיבציה לעזור לך להשיג את המטרות שלך</span>
+              </motion.li>
+            </motion.ul>
+
+            {/* Call to Action */}
+            <motion.div 
+              variants={itemVariants}
+              className="pt-4"
+            >
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="bg-primary text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-primary/30 transition-all duration-300"
+              >
+                הצטרפו אלינו עכשיו
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

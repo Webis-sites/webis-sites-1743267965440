@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface CTASectionProps {
   headline?: string;
@@ -14,19 +15,63 @@ const CTASection: React.FC<CTASectionProps> = ({
   headline = 'הצטרפו למכון כושר ביתא והתחילו את המסע שלכם לחיים בריאים!',
   subheadline = 'אימונים מותאמים אישית, מאמנים מקצועיים, וציוד מתקדם - הכל במקום אחד',
   buttonText = 'קבע תור עכשיו',
-  backgroundImageUrl = '/fitness-background.jpg', // Placeholder image path
+  backgroundImageUrl = 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1170',
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+        duration: 0.6
+      }
+    }
+  };
 
-  // Animation effect when component mounts
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        type: "spring", 
+        stiffness: 100, 
+        damping: 10 
+      } 
+    }
+  };
+
+  const floatingBadgeVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 200, 
+        damping: 20,
+        delay: 0.4
+      } 
+    }
+  };
+
+  const scaleOnHover = {
+    scale: 1.05,
+    boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
+    transition: { 
+      type: "spring", 
+      stiffness: 400, 
+      damping: 10 
+    }
+  };
 
   return (
     <section 
+      id="cta"
       dir="rtl" 
-      className="relative overflow-hidden py-16 md:py-24 w-full"
+      className="relative overflow-hidden py-28 w-full"
       aria-labelledby="cta-headline"
     >
       {/* Background Image with Overlay */}
@@ -37,48 +82,77 @@ const CTASection: React.FC<CTASectionProps> = ({
           fill
           className="object-cover"
           priority
+          quality={90}
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-black/60 to-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50"></div>
       </div>
 
-      {/* Glassmorphism Container */}
+      {/* Decorative Elements */}
+      <motion.div 
+        className="absolute top-10 left-1/4 w-64 h-64 rounded-full bg-primary/40 blur-3xl"
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      />
+      <motion.div 
+        className="absolute bottom-10 right-1/4 w-80 h-80 rounded-full bg-secondary/30 blur-3xl"
+        animate={{ 
+          scale: [1, 1.3, 1],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay: 2
+        }}
+      />
+
+      {/* Main Content Container */}
       <div className="container mx-auto px-4 relative z-10">
-        <div 
-          className={`
-            backdrop-blur-md bg-white/10 rounded-2xl
-            border border-white/20 shadow-lg
-            p-8 md:p-12 max-w-4xl mx-auto
-            transition-all duration-700 ease-out
-            ${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'}
-            bg-gradient-to-br from-[#feffd6]/40 to-[#feffd6]/20
-          `}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="backdrop-blur-md bg-white/10 rounded-3xl
+            border border-white/20 shadow-xl
+            p-12 md:p-16 max-w-4xl mx-auto"
         >
           {/* Content Container */}
           <div className="text-center">
-            <h2 
+            <motion.h2 
+              variants={itemVariants}
               id="cta-headline"
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white drop-shadow-md"
-              style={{ fontFamily: '"Rubik", sans-serif' }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
             >
-              {headline}
-            </h2>
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent inline-block">
+                {headline}
+              </span>
+            </motion.h2>
             
-            <p 
-              className="text-lg md:text-xl mb-8 text-white/90"
-              style={{ fontFamily: '"Heebo", sans-serif' }}
+            <motion.p 
+              variants={itemVariants}
+              className="text-xl md:text-2xl mb-10 text-white leading-relaxed max-w-3xl mx-auto"
             >
               {subheadline}
-            </p>
+            </motion.p>
             
             {/* CTA Button with Animation */}
-            <button
-              className={`
-                bg-[#fcff2e] hover:bg-[#e0e329] text-gray-900 font-bold
-                py-3 px-8 md:py-4 md:px-10 rounded-full text-lg md:text-xl
-                transition-all duration-300 transform hover:scale-105
-                shadow-lg hover:shadow-xl border border-[#fcff2e]/50
-                relative overflow-hidden group
-              `}
+            <motion.button
+              variants={itemVariants}
+              whileHover={scaleOnHover}
+              whileTap={{ scale: 0.98 }}
+              className="bg-gradient-to-r from-primary to-primary-dark text-white font-bold
+                py-5 px-10 rounded-xl text-xl
+                shadow-lg shadow-primary/20
+                relative overflow-hidden group"
               onClick={() => console.log('Button clicked')}
               aria-label={buttonText}
             >
@@ -98,40 +172,42 @@ const CTASection: React.FC<CTASectionProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </span>
-            </button>
-            
-            {/* Decorative Element */}
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#fcff2e]/20 rounded-full blur-2xl"></div>
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#fcff2e]/20 rounded-full blur-2xl"></div>
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
         
         {/* Floating Badges */}
-        <div 
-          className={`
-            absolute top-10 left-10 md:top-20 md:left-20
-            backdrop-blur-md bg-white/20 rounded-full
+        <motion.div 
+          variants={floatingBadgeVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          whileHover={{ y: -5, scale: 1.05 }}
+          className="absolute top-10 left-10 md:top-20 md:left-20
+            backdrop-blur-md bg-gradient-to-r from-primary-dark/60 to-primary/60 rounded-full
             border border-white/30 shadow-lg
-            py-2 px-4 text-white
-            transition-all duration-1000 delay-300 ease-out
-            ${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'}
-          `}
+            py-3 px-6 text-white"
         >
-          <span className="text-sm md:text-base">⭐ מדורג מספר 1 באזור</span>
-        </div>
+          <span className="text-base md:text-lg font-semibold flex items-center gap-2">
+            <span className="text-xl">⭐</span> מדורג מספר 1 באזור
+          </span>
+        </motion.div>
         
-        <div 
-          className={`
-            absolute bottom-10 right-10 md:bottom-20 md:right-20
-            backdrop-blur-md bg-white/20 rounded-full
+        <motion.div 
+          variants={floatingBadgeVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          whileHover={{ y: -5, scale: 1.05 }}
+          className="absolute bottom-10 right-10 md:bottom-20 md:right-20
+            backdrop-blur-md bg-gradient-to-r from-secondary/60 to-secondary-dark/60 rounded-full
             border border-white/30 shadow-lg
-            py-2 px-4 text-white
-            transition-all duration-1000 delay-500 ease-out
-            ${isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'}
-          `}
+            py-3 px-6 text-white"
         >
-          <span className="text-sm md:text-base">🔥 הצטרפו עכשיו וקבלו 20% הנחה</span>
-        </div>
+          <span className="text-base md:text-lg font-semibold flex items-center gap-2">
+            <span className="text-xl">🔥</span> הצטרפו עכשיו וקבלו 20% הנחה
+          </span>
+        </motion.div>
       </div>
     </section>
   );

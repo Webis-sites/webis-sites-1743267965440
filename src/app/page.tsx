@@ -14,35 +14,30 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // This will be replaced when components are added
+    // Simulating loading - will be automatically hidden when assets are loaded
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 800);
     
     return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-12 w-48 bg-gray-200 rounded"></div>
-          <div className="h-4 w-64 bg-gray-200 rounded"></div>
-          <div className="h-4 w-56 bg-gray-200 rounded"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative w-24 h-24">
+            <div className="absolute w-full h-full rounded-full border-4 border-primary/30 border-t-primary/90 animate-spin"></div>
+            <div className="absolute inset-2 w-20 h-20 rounded-full border-4 border-secondary/30 border-b-secondary/90 animate-spin animation-delay-500"></div>
+          </div>
+          <p className="text-gray-500 text-lg font-medium">טוען...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="max-w-5xl w-full text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to your new website</h1>
-        <p className="text-xl mb-8">
-          Start building your site by adding components to this page.
-        </p>
-      </div>
-    
+    <main className="flex min-h-screen flex-col">
       <HeroSection />
     
       <AboutSection />
